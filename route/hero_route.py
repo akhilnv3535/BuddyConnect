@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import APIRouter
 from fastapi import HTTPException, Query
-from sqlmodel import select
 
 from core.db import SessionDep
 from route.models import Hero
@@ -26,7 +25,8 @@ def read_heroes(
         offset: int = 0,
         limit: Annotated[int, Query(le=100)] = 100,
 ) -> list[Hero]:
-    heroes = session.exec(select(Hero).offset(offset).limit(limit)).all()
+    heroes = session.query(Hero).offset(offset).limit(limit).all()
+    # heroes = session.exec(select(Hero).offset(offset).limit(limit)).all()
     return heroes
 
 
