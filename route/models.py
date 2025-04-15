@@ -1,4 +1,5 @@
 from datetime import datetime
+from enum import Enum
 from typing import Optional, List
 
 from pydantic import EmailStr
@@ -179,6 +180,13 @@ class PartnerUsersResponse(SQLModel):
     email: EmailStr
 
 
+class StatusEnum(str, Enum):  # str ensures it stores as VARCHAR instead of INT
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    PENDING = "pending"
+    COMPLETED = "completed"
+
+
 class Order(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     service_id: Optional[int] = Field(default=None, foreign_key="services.id")
@@ -190,6 +198,8 @@ class Order(SQLModel, table=True):
     earnings: Optional[int] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
+    order_status: StatusEnum = Field(default=StatusEnum.PENDING)
+
     created: Optional[datetime] = Field(
         default_factory=lambda: now_utc()
     )
