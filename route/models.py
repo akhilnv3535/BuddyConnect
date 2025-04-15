@@ -79,21 +79,18 @@ class SubCategoryCreate(SQLModel):
     icon: Optional[str] = None
 
 
-# Saved address
-# Flat No/ Floor, Address, Mobile No, Name,
-
 #  Booking confirmation
 # Services
 # Category
 # SubCategory
-#
-#
+
 class SavedAddress(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     save_as: str
-    house_flat_no: str
+    house_flat_no: Optional[str] = Field(default=None, nullable=True)
     address: str
-    description: str
+    description: Optional[str] = Field(default=None, nullable=True)
+    pincode: Optional[int] = Field(default=None, nullable=True)
     user_id: Optional[int] = Field(default=None, foreign_key="customerusers.id")
     created: Optional[datetime] = Field(
         default_factory=lambda: now_utc()
@@ -123,3 +120,12 @@ class CustomerUsersCreate(SQLModel):
     profile_pic: str | None = None
     mobile_no: int
     email: EmailStr | None = Field(default=None)
+
+
+class SavedAddressCreate(SQLModel):
+    save_as: str
+    house_flat_no: Optional[str] = None
+    address: str
+    description: Optional[str] = None
+    user_id: int
+    pincode: int

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from core.db import SessionDep
-from route.models import CustomerUsers, CustomerUsersCreate
+from route.models import CustomerUsers, CustomerUsersCreate, SavedAddress, SavedAddressCreate
 
 route = APIRouter(prefix="/user", tags=["Users"])
 
@@ -28,3 +28,24 @@ def validate_otp(otp: int, session: SessionDep):
     if otp != 1234:
         raise HTTPException(status_code=403, detail="Invalid OTP")
     return {"detail": "Ok"}
+
+
+# Saved Address
+
+@route.post("/address", response_model=SavedAddress)
+def create_user(address: SavedAddressCreate, session: SessionDep):
+    addr = SavedAddress(**address.model_dump())
+    session.add(addr)
+    session.commit()
+    session.refresh(addr)
+    return addr
+
+
+@route.get("/address")
+def user_address(user_id: int, session: SessionDep) -> list[SavedAddress]:
+    addr = session.query(SavedAddress).filter(SavedAddress.user_id == user_id).all()
+    if not addr:
+        raise HTTPException(status_code=404, detail="No saved address found for user")
+    return addr
+
+
