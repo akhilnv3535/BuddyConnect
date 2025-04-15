@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from core.db import SessionDep
 from route.models import CustomerUsers, CustomerUsersCreate, SavedAddress, SavedAddressCreate, PartnerUsersCreate, \
-    PartnerUsers, PartnerUsersResponse
+    PartnerUsers, PartnerUsersResponse, OrderCreate, Order
 
 route = APIRouter(prefix="/user", tags=["Users"])
 
@@ -51,7 +51,7 @@ def user_address(user_id: int, session: SessionDep) -> list[SavedAddress]:
 
 
 @route.post("/partner/user", response_model=PartnerUsers)
-def create_user(user: PartnerUsersCreate, session: SessionDep):
+def create_partner_user(user: PartnerUsersCreate, session: SessionDep):
     user = PartnerUsers(**user.model_dump())
     session.add(user)
     session.commit()

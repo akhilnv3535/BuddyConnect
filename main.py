@@ -5,6 +5,7 @@ from core.db import engine
 from route.category_route import cat_route
 # from route.hero_route import route as hero_route
 from route.models import SQLModel
+from route.order_route import route as order_route
 from route.user_route import route as user_route
 
 SQLModel.metadata.create_all(engine)
@@ -21,6 +22,7 @@ app.add_middleware(
 
 app.include_router(cat_route)
 app.include_router(user_route)
+app.include_router(order_route)
 
 
 @app.get('ping')

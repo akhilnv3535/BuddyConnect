@@ -177,3 +177,32 @@ class PartnerUsersResponse(SQLModel):
     profile_pic: Optional[str] = None
     mobile_no: str
     email: EmailStr
+
+
+class Order(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    service_id: Optional[int] = Field(default=None, foreign_key="services.id")
+    category_id: Optional[int] = Field(default=None, foreign_key="category.id")
+    sub_category_id: Optional[int] = Field(default=None, foreign_key="subcategory.id")
+    service_hours: Optional[int] = Field(default=None, nullable=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="customerusers.id", nullable=False)
+    partner_id: Optional[int] = Field(default=None, foreign_key="partnerusers.id", nullable=True)
+    earnings: Optional[int] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    created: Optional[datetime] = Field(
+        default_factory=lambda: now_utc()
+    )
+    modified: Optional[datetime] = Field(
+        default_factory=lambda: now_utc()
+    )
+
+
+class OrderCreate(SQLModel):
+    service_id: int
+    category_id: int
+    sub_category_id: int
+    user_id: int
+    earnings: Optional[int] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
