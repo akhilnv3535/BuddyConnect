@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
 from core.db import SessionDep
-from route.models import CustomerUsers, CustomerUsersCreate, SavedAddress, SavedAddressCreate
+from route.models import CustomerUsers, CustomerUsersCreate, SavedAddress, SavedAddressCreate, PartnerUsersCreate, \
+    PartnerUsers, PartnerUsersResponse
 
 route = APIRouter(prefix="/user", tags=["Users"])
 
@@ -49,3 +50,18 @@ def user_address(user_id: int, session: SessionDep) -> list[SavedAddress]:
     return addr
 
 
+@route.post("/partner/user", response_model=PartnerUsers)
+def create_user(user: PartnerUsersCreate, session: SessionDep):
+    user = PartnerUsers(**user.model_dump())
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+    return user
+
+
+@route.get("/partner/{partner_id}")
+def fetch_partner(partner_id: int, session: SessionDep) -> PartnerUsersResponse:
+    partner = session.query(PartnerUsers).filter(PartnerUsers.id == partner_id).first()
+    if not partner:
+        raise HTTPException(status_code=404, detail="Partner Not found")
+    return partner
