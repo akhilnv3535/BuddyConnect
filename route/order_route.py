@@ -9,6 +9,8 @@ route = APIRouter(prefix="/orders", tags=["Order"])
 @route.post("/")
 def create_order(order: OrderCreate, session: SessionDep) -> Order:
     orde = Order(**order.model_dump())
+    orde.service_hours = (orde.end_time - orde.start_time).total_seconds() / 3600
+    print("Order time: ", orde.service_hours)
     session.add(orde)
     session.commit()
     session.refresh(orde)

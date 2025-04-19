@@ -193,7 +193,7 @@ class Order(SQLModel, table=True):
     category_id: Optional[int] = Field(default=None, foreign_key="category.id")
     category: Optional[str] = Field(default=None, foreign_key="category.name")
     sub_category_id: Optional[int] = Field(default=None, foreign_key="subcategory.id")
-    service_hours: Optional[int] = Field(default=None, nullable=True)
+    service_hours: Optional[float] = Field(default=None, nullable=True)
     user_id: Optional[int] = Field(default=None, foreign_key="customerusers.id", nullable=False)
     partner_id: Optional[int] = Field(default=None, foreign_key="partnerusers.id", nullable=True)
     earnings: Optional[int] = None
