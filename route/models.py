@@ -140,7 +140,14 @@ class PartnerUsers(SQLModel, table=True):
     email: EmailStr | None = Field(default=None, unique=True)
 
     panId: Optional[str] = Field(default=None, max_length=10, unique=True)
+    pan_front: Optional[str] = None
+    pan_back: Optional[str] = None
     aadharID: Optional[str] = Field(default=None, max_length=12, unique=True)
+    aadhar_front: Optional[str] = None
+    aadhar_back: Optional[str] = None
+    driving_license: Optional[str] = Field(default=None, max_length=12, unique=True)
+    driving_license_front: Optional[str] = None
+    driving_license_back: Optional[str] = None
     bankAccount: Optional[str] = Field(default=None, max_length=30)
     ifscCode: Optional[str] = Field(default=None, max_length=11)
     address: Optional[str] = Field(default=None, nullable=False)
@@ -195,12 +202,20 @@ class Order(SQLModel, table=True):
     sub_category_id: Optional[int] = Field(default=None, foreign_key="subcategory.id")
     service_hours: Optional[float] = Field(default=None, nullable=True)
     user_id: Optional[int] = Field(default=None, foreign_key="customerusers.id", nullable=False)
-    partner_id: Optional[int] = Field(default=None, foreign_key="partnerusers.id", nullable=True)
+    user_name: str
+    user_mobile_no: Optional[str] = Field(default=None, foreign_key="customerusers.mobile_no", nullable=False)
     earnings: Optional[int] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     order_status: StatusEnum = Field(default=StatusEnum.PENDING)
-
+    partner_id: Optional[int] = Field(default=None, foreign_key="partnerusers.id", nullable=True)
+    partner_name: Optional[str] = Field(default=None, nullable=True)
+    partner_mobile_no: Optional[str] = Field(default=None, foreign_key="partnerusers.mobile_no", nullable=True)
+    is_accepted: Optional[bool] = Field(default=False)
+    accepted_at: Optional[datetime] = None
+    location: Optional[str] = Field(default=None, nullable=False)
+    address: Optional[str] = Field(default=None, nullable=False, max_length=150)
+    is_cancelled: Optional[bool] = Field(default=False)
     created: Optional[datetime] = Field(
         default_factory=lambda: now_utc()
     )
@@ -215,6 +230,18 @@ class OrderCreate(SQLModel):
     category: str
     sub_category_id: int
     user_id: int
+    user_name: str
+    user_mobile_no: str
     earnings: Optional[int] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
+    location: str
+    address: str
+
+
+class OrderUpdate(SQLModel):
+    earnings: Optional[int] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+    location: Optional[str] = None
+    address: Optional[str] = None

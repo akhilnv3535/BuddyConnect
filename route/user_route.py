@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from core.db import SessionDep
 from route.models import CustomerUsers, CustomerUsersCreate, SavedAddress, SavedAddressCreate, PartnerUsersCreate, \
-    PartnerUsers, PartnerUsersResponse, OrderCreate, Order
+    PartnerUsers, PartnerUsersResponse
 
 route = APIRouter(prefix="/user", tags=["Users"])
 

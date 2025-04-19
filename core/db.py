@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from fastapi import Depends
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import create_engine, Session
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 load_dotenv()
 
@@ -17,6 +18,7 @@ DB_URL = os.getenv("DB_URL")
 engine = create_engine(DB_URL)
 
 SessionLocal = sessionmaker(bind=engine)
+async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 # SQLModel.metadata.create_all(engine)
