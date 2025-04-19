@@ -191,6 +191,7 @@ class Order(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     service_id: Optional[int] = Field(default=None, foreign_key="services.id")
     category_id: Optional[int] = Field(default=None, foreign_key="category.id")
+    category: Optional[str] = Field(default=None, foreign_key="category.name")
     sub_category_id: Optional[int] = Field(default=None, foreign_key="subcategory.id")
     service_hours: Optional[int] = Field(default=None, nullable=True)
     user_id: Optional[int] = Field(default=None, foreign_key="customerusers.id", nullable=False)
@@ -211,6 +212,7 @@ class Order(SQLModel, table=True):
 class OrderCreate(SQLModel):
     service_id: int
     category_id: int
+    category: str
     sub_category_id: int
     user_id: int
     earnings: Optional[int] = None
