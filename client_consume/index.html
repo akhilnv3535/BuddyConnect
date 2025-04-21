@@ -12,7 +12,7 @@
 <ul id='messages'>
 </ul>
 <script>
-    var ws = new WebSocket(`ws://localhost:5001/orders/communicate`);
+    var ws = new WebSocket(`ws://localhost:5001/orders/ws`);
     console.log("Connected")
     ws.onmessage = function (event) {
         var messages = document.getElementById('messages')
