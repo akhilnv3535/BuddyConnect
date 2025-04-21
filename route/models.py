@@ -245,3 +245,8 @@ class OrderUpdate(SQLModel):
     end_time: Optional[datetime] = None
     location: Optional[str] = None
     address: Optional[str] = None
+
+
+class OrderAccept(SQLModel):
+    id: int
+    partner_id: int

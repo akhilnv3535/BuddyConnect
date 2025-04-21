@@ -18,7 +18,7 @@ def create_service(service: ServicesCreate, session: SessionDep):
     return service
 
 
-@cat_route.get("/services/")
+@cat_route.get("/services")
 def read_services(
         session: SessionDep,
         offset: int = 0,
@@ -47,7 +47,7 @@ def delete_service(service_id: int, session: SessionDep):
 
 
 # Category
-@cat_route.post("/category/", response_model=Category)
+@cat_route.post("/category", response_model=Category)
 def create_category(category: CategoryCreate, session: SessionDep):
     cat = Category(**category.model_dump())
     session.add(cat)
@@ -56,7 +56,7 @@ def create_category(category: CategoryCreate, session: SessionDep):
     return cat
 
 
-@cat_route.get("/category/")
+@cat_route.get("/category")
 def read_categorys(
         session: SessionDep,
         offset: int = 0,
@@ -85,7 +85,7 @@ def read_category(cat_id: int, session: SessionDep) -> Category:
 
 
 # Sub Category
-@cat_route.post("/sub-category/", response_model=SubCategory, tags=["Sub Categories"])
+@cat_route.post("/sub-category", response_model=SubCategory, tags=["Sub Categories"])
 def create_sub_category(sub_category: SubCategoryCreate, session: SessionDep):
     sub_cat = SubCategory(**sub_category.model_dump())
     session.add(sub_cat)
@@ -94,7 +94,7 @@ def create_sub_category(sub_category: SubCategoryCreate, session: SessionDep):
     return sub_cat
 
 
-@cat_route.get("/sub-category/", tags=["Sub Categories"])
+@cat_route.get("/sub-category", tags=["Sub Categories"])
 def read_sub_categorys(
         session: SessionDep,
         offset: int = 0,
