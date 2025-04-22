@@ -83,7 +83,8 @@ async def create_order(order: OrderCreate, session: SessionDep) -> Order:
         "data": {
             "id": orde.id,
             "service_hours": orde.service_hours,
-            "earnings": orde.earnings
+            "earnings": orde.earnings,
+            "address": orde.address
         }
     }
     await manager.broadcast(json_data)
@@ -134,10 +135,11 @@ def cancel_order(order_id: int, session: SessionDep):
 @route.post("/accept/{order_id}")
 def update_order_accepted(order_id: int, partner_id: int, session: SessionDep):
     try:
-
         print("order id: ", order_id)
         print("order partner id: ", partner_id)
         orde = session.query(Order).filter(Order.id == order_id).first()
+        if orde.is_accepted:
+            raise HTTPException(status_code=400, detail="Order already accepted")
         orde.is_accepted = True
         orde.partner_id = partner_id
         orde.accepted_at = now_utc()
