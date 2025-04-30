@@ -8,6 +8,13 @@ from sqlmodel import SQLModel, Field, Relationship
 from utils import now_utc
 
 
+class ApprovalEnum(str, Enum):
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    PENDING = "pending"
+    REJECTED = "rejected"
+
+
 class Services(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True)
@@ -138,6 +145,7 @@ class PartnerUsers(SQLModel, table=True):
     profile_pic: str | None = None
     mobile_no: str = Field(max_length=15, unique=True)
     email: EmailStr | None = Field(default=None, unique=True)
+    approval_status: ApprovalEnum = Field(default=ApprovalEnum.PENDING, nullable=True)
 
     panId: Optional[str] = Field(default=None, max_length=10, unique=True)
     pan_front: Optional[str] = None

@@ -1,10 +1,22 @@
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, HTTPException, Query
 
 from core.db import SessionDep
 from route.models import CustomerUsers, CustomerUsersCreate, SavedAddress, SavedAddressCreate, PartnerUsersCreate, \
-    PartnerUsers, PartnerUsersResponse
+    PartnerUsers
 
 route = APIRouter(prefix="/user", tags=["Users"])
+
+
+@route.get("/")
+def read_users(
+        session: SessionDep,
+        offset: int = 0,
+        limit: Annotated[int, Query(le=20)] = 20,
+) -> list[CustomerUsers]:
+    users = session.query(CustomerUsers).offset(offset).limit(limit).all()
+    return users
 
 
 @route.post("/", response_model=CustomerUsers)
@@ -65,3 +77,26 @@ def fetch_partner(partner_id: int, session: SessionDep) -> PartnerUsers:
     if not partner:
         raise HTTPException(status_code=404, detail="Partner Not found")
     return partner
+
+
+@route.post("/partner/approval/{partner_id}")
+def fetch_partner(partner_id: int, approval_status: str, session: SessionDep) -> PartnerUsers:
+    partner = session.query(PartnerUsers).filter(PartnerUsers.id == partner_id).first()
+    if not partner:
+        raise HTTPException(status_code=404, detail="Partner Not found")
+
+    partner.approval_status = approval_status
+    session.add(partner)
+    session.commit()
+    session.refresh(partner)
+    return partner
+
+
+@route.get("/partner")
+def read_partners(
+        session: SessionDep,
+        offset: int = 0,
+        limit: Annotated[int, Query(le=20)] = 20,
+) -> list[PartnerUsers]:
+    partners = session.query(PartnerUsers).offset(offset).limit(limit).all()
+    return partners

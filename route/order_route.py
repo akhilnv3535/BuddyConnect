@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, WebSocket
 
 from core.db import SessionDep
 from route.connection_manager import ConnectionManager
-from route.models import OrderCreate, Order, OrderUpdate
+from route.models import OrderCreate, Order, OrderUpdate, CustomerUsers, PartnerUsers
 from utils import now_utc
 
 route = APIRouter(prefix="/orders", tags=["Order"])
@@ -150,3 +150,16 @@ def update_order_accepted(order_id: int, partner_id: int, session: SessionDep):
     except Exception as e:
         print('error update: ', e)
         return False
+
+
+@route.get("/all-details")
+def get_all_details(session: SessionDep):
+    users_count = session.query(CustomerUsers).count()
+    partners_count = session.query(PartnerUsers).count()
+    pending_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "pending").count()
+    rejected_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "rejected").count()
+    approved_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "rejected").count()
+    orders_count = session.query(PartnerUsers).count()
+    return {"users_count": users_count, "orders_count": orders_count, "partners_count": partners_count,
+            "approved_partners": approved_partners, "rejected_partners": rejected_partners,
+            "pending_partners": pending_partners}
