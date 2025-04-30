@@ -60,7 +60,7 @@ def create_partner_user(user: PartnerUsersCreate, session: SessionDep):
 
 
 @route.get("/partner/{partner_id}")
-def fetch_partner(partner_id: int, session: SessionDep) -> PartnerUsersResponse:
+def fetch_partner(partner_id: int, session: SessionDep) -> PartnerUsers:
     partner = session.query(PartnerUsers).filter(PartnerUsers.id == partner_id).first()
     if not partner:
         raise HTTPException(status_code=404, detail="Partner Not found")
