@@ -158,7 +158,7 @@ def get_all_details(session: SessionDep):
     partners_count = session.query(PartnerUsers).count()
     pending_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "pending").count()
     rejected_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "rejected").count()
-    approved_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "approved").count()
+    approved_partners = session.query(PartnerUsers).where(PartnerUsers.approval_status == "active").count()
     orders_count = session.query(PartnerUsers).count()
     return {"users_count": users_count, "orders_count": orders_count, "partners_count": partners_count,
             "approved_partners": approved_partners, "rejected_partners": rejected_partners,
